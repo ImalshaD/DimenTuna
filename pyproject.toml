@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "dimentuna"
+version = "0.1.0"
+description = "LLMs Internal Space editing to support low-resource, under-represented languages."
+authors = ["ImalshaD <plid475@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
