@@ -27,6 +27,8 @@ class DTHfLLM(DTHfEncoder):
             "do_sample": config.do_sample,
             "temperature": config.temperature
         }
+
+        self.to()
         
     def get_Layer_output(self, texts, layer_idx, pooling_strategy=None, custom_function: Optional[Callable] = None):
         inputs = self.tokenize(texts)

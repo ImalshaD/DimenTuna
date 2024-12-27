@@ -18,6 +18,8 @@ class DTHfEncoder:
         self.template = config.template
 
         self.embedding_size = self.model.config.hidden_size
+
+        self.to()
     
     def freeze(self):
         for param in self.model.parameters():
@@ -28,7 +30,8 @@ class DTHfEncoder:
             device = self.device
         else:
             self.device = device
-        self.model.to(device)
+        if device is not None:
+            self.model.to(device)
 
     def enableDP(self, gpu_ids=None):
         self.model = torch.nn.DataParallel(self.model, device_ids=gpu_ids)
