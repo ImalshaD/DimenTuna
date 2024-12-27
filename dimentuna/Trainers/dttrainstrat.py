@@ -16,7 +16,7 @@ class DTTrainStratergy(ABC):
 
     def __init__(self, llm : LayerWrappebleDTHfLLM, encoder : DTHfEncoder, projector : DTProjector,
                  train_loader, val_loader,lr,device, 
-                 target_layers : list[int]|int,**kwargs):
+                 target_layers : list[int]|int, enable_dp : bool = False, gpu_ids=None,**kwargs):
         
         self.llm = llm
         self.encoder = encoder
@@ -26,6 +26,9 @@ class DTTrainStratergy(ABC):
         self.lr = lr
 
         self.device = device
+        
+        self.to()
+        self.enable_dp(enable_dp, gpu_ids)
 
         if isinstance(target_layers, int):
             target_layers = [target_layers]
@@ -36,9 +39,11 @@ class DTTrainStratergy(ABC):
             device = self.device
         else:
             self.device = device
-        self.llm.to(device)
-        self.encoder.to(device)
-        self.projector.to(device)
+        
+        if device is not None:
+            self.llm.to(device)
+            self.encoder.to(device)
+            self.projector.to(device)
     
     def enable_dp(self, gpu_ids=None):
        
@@ -88,6 +93,7 @@ class TwoPhasedTS(DTTrainStratergy):
         
         self.projector.train()
         self.llm.freeze()
+        self.llm.engage_layer_wrapper(layer_idx, status=False)
 
         for epoch in range(epochs):
             
