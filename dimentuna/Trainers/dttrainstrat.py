@@ -79,10 +79,6 @@ class DTTrainStratergy(ABC):
     def train(self, epochs : int, **kwargs):
         pass
 
-    @abstractmethod
-    def evaluate(self, loader):
-        pass
-
 class TwoPhasedTS(DTTrainStratergy):
 
     def __init__(self, llm, encoder, projector, train_loader, val_loader, lr, device, target_layers,
