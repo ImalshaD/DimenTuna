@@ -28,7 +28,8 @@ class DTTrainStratergy(ABC):
         self.device = device
         
         self.to()
-        self.enable_dp(gpu_ids)
+        if enable_dp:
+            self.enable_dp(gpu_ids)
 
         if isinstance(target_layers, int):
             target_layers = [target_layers]
