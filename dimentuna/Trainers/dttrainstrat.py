@@ -95,6 +95,8 @@ class TwoPhasedTS(DTTrainStratergy):
         self.llm.freeze()
         self.llm.engage_layer_wrapper(layer_idx, status=False)
 
+        self.llm.print_status()
+
         for epoch in range(epochs):
             
             self.projector.train()
