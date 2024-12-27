@@ -54,7 +54,7 @@ class DTHfEncoder:
         inputs = self.tokenize(texts)
         with torch.no_grad():
             outputs = self.model(**inputs)
-            embeddings = outputs.hidden_states[-1]
+            embeddings = outputs.last_hidden_state
         
         if pooling_strategy is None and custom_function is None:
             return embeddings
@@ -65,6 +65,8 @@ class DTHfEncoder:
             embeddings = embeddings.max(dim=1)
         elif pooling_strategy == 'cls':
             embeddings = embeddings[:,0,:]
+        elif pooling_strategy == "pooler":
+            embeddings = outputs.pooler_output
         elif custom_function is not None:
             embeddings = custom_function(embeddings)
         else:
