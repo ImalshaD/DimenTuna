@@ -34,6 +34,13 @@ class DTTrainStratergy(ABC):
             target_layers = [target_layers]
         self.target_layers = target_layers
     
+    def print_status(self):
+        is_encoder_frozen = not any(p.requires_grad for p in self.encoder.parameters())
+        is_projector_frozen = not any(p.requires_grad for p in self.projector.parameters())
+        print(f"Encoder_Frozen: {is_encoder_frozen}")
+        print(f"Projector_Frozen: {is_projector_frozen}")
+        self.llm.print_status()
+    
     def to(self, device = None):
         if device is None:
             device = self.device
@@ -79,9 +86,10 @@ class DTTrainStratergy(ABC):
 class TwoPhasedTS(DTTrainStratergy):
 
     def __init__(self, llm, encoder, projector, train_loader, val_loader, lr, device, target_layers,
-                 mapper_train_loader, mapper_val_loader,  
+                 mapper_train_loader, mapper_val_loader,  enable_dp : bool = False, gpu_ids=None,
                  **kwargs):
-        super().__init__(llm, encoder, projector, train_loader, val_loader, lr, device, target_layers, **kwargs)
+        super().__init__(llm, encoder, projector, train_loader, val_loader, lr, device, target_layers, 
+                            enable_dp, gpu_ids, **kwargs)
         
         self.mapper_train_loader = mapper_train_loader
         self.mapper_val_loader = mapper_val_loader
@@ -95,7 +103,7 @@ class TwoPhasedTS(DTTrainStratergy):
         self.llm.freeze()
         self.llm.engage_layer_wrapper(layer_idx, status=False)
 
-        self.llm.print_status()
+        self.print_status()
 
         for epoch in range(epochs):
             
@@ -148,7 +156,7 @@ class TwoPhasedTS(DTTrainStratergy):
         wrapper = self.llm.ready2train(layer_idx)
         optimizer = torch.optim.Adam(wrapper.parameters(), lr=self.lr)
         
-        self.llm.print_status()
+        self.print_status()
 
         
         for epoch in range(epochs):
