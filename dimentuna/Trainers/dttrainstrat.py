@@ -73,8 +73,9 @@ class DTTrainStratergy(ABC):
     def freeze_llm(self):
         self.llm.freeze()
     
-    def freeze_projector(self):
-        self.projector.freeze()
+    def freeze_projector(self, status : bool = True):
+        for param in self.projector.parameters():
+            param.requires_grad = not status
 
     @abstractmethod
     def train(self, epochs : int, **kwargs):

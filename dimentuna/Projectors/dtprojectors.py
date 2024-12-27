@@ -56,6 +56,7 @@ class FeedForwardProjector(DTProjector):
                 x = self.pooler_function(x)
             else:
                 raise ValueError(f"Invalid Pooler Type {self.pooler_type}")
+        
         assert x.shape[1] == self.input_dim, f"Input dimension mismatch. Expected {self.input_dim} but got {x.shape[1]}"
         
         x = self.network(x)
