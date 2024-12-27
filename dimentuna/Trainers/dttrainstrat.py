@@ -110,12 +110,12 @@ class TwoPhasedTS(DTTrainStratergy):
             for i, batch in enumerate(tqdm(self.train_loader, desc=f"Epoch {epoch}")):
                 self.projector_optimizer.zero_grad()
                 
-                data = batch.to(self.device)
-                encoded_data = self.encoder.encode(data,"mean")
-                llm_embeddings = self.llm.get_Layer_output(data, layer_idx, "mean")
+                encoded_data = self.encoder.encode(batch,"mean")
+                llm_embeddings = self.llm.get_Layer_output(batch, layer_idx, "mean")
                 
                 projected_data = self.projector(llm_embeddings)
                 loss = self.criteria(encoded_data, projected_data)
+                
                 loss.backward()
                 self.projector_optimizer.step()
 
@@ -133,9 +133,9 @@ class TwoPhasedTS(DTTrainStratergy):
 
         total_loss = 0.0
         for i, batch in enumerate(tqdm(loader)):
-            data = batch.to(self.device)
-            encoded_data = self.encoder.encode(data,"mean")
-            llm_embeddings = self.llm.get_Layer_output(data, layer_idx, "mean")
+            
+            encoded_data = self.encoder.encode(batch,"mean")
+            llm_embeddings = self.llm.get_Layer_output(batch, layer_idx, "mean")
             
             with torch.no_grad():
                 projected_data = self.projector(llm_embeddings)
@@ -165,9 +165,9 @@ class TwoPhasedTS(DTTrainStratergy):
                 
                 optimizer.zero_grad()
                 
-                data = batch.to(self.device)
-                encoded_data = self.encoder.encode(data,"mean")
-                llm_embeddings = self.llm.get_Layer_output(data, layer_idx, "mean")
+                
+                encoded_data = self.encoder.encode(batch,"mean")
+                llm_embeddings = self.llm.get_Layer_output(batch, layer_idx, "mean")
 
                 mapped_data = wrapper(llm_embeddings)
                 projected_data = self.projector(mapped_data)
@@ -194,9 +194,9 @@ class TwoPhasedTS(DTTrainStratergy):
         
         total_loss = 0.0
         for i, batch in enumerate(tqdm(loader)):
-            data = batch.to(self.device)
-            encoded_data = self.encoder.encode(data,"mean")
-            llm_embeddings = self.llm.get_Layer_output(data, layer_idx, "mean")
+            
+            encoded_data = self.encoder.encode(batch,"mean")
+            llm_embeddings = self.llm.get_Layer_output(batch, layer_idx, "mean")
             
             with torch.no_grad():
                 mapped_data = wrapper(llm_embeddings)
@@ -238,9 +238,9 @@ class MixedTS(DTTrainStratergy):
             for i, batch in enumerate(tqdm(self.train_loader, desc=f"Epoch {epoch}")):
                 optimizer.zero_grad()
                 
-                data = batch.to(self.device)
-                encoded_data = self.encoder.encode(data,"mean")
-                llm_embeddings = self.llm.get_Layer_output(data, layer_idx, "mean")
+                
+                encoded_data = self.encoder.encode(batch,"mean")
+                llm_embeddings = self.llm.get_Layer_output(batch, layer_idx, "mean")
                 
                 mapped_data = wrapper(llm_embeddings)
                 projected_data = self.projector(mapped_data)
@@ -265,9 +265,9 @@ class MixedTS(DTTrainStratergy):
         total_loss = 0.0
 
         for i, batch in enumerate(tqdm(loader)):
-            data = batch.to(self.device)
-            encoded_data = self.encoder.encode(data,"mean")
-            llm_embeddings = self.llm.get_Layer_output(data, layer_idx, "mean")
+            
+            encoded_data = self.encoder.encode(batch,"mean")
+            llm_embeddings = self.llm.get_Layer_output(batch, layer_idx, "mean")
             
             with torch.no_grad():
                 mapped_data = wrapper(llm_embeddings)
