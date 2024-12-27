@@ -8,7 +8,7 @@ class LayerWrappebleDTHfLLM(DTHfLLM):
         self.wrapper_mapping = dict()
     
     def replace_layer(self, layer_idx : int, layer_wrapper : DTLayerWrapper):
-        original_layer = self.model.layers[layer_idx]
+        original_layer = self.model.model.layers[layer_idx]
         layer_wrapper.set_layer(original_layer)
         self.model.layers[layer_idx] = layer_wrapper
         self.wrapper_mapping[layer_idx] = layer_wrapper
@@ -61,7 +61,7 @@ class LayerWrappebleDTHfLLM(DTHfLLM):
     def print_status(self):
         print("-LLM")
         
-        for i, layer in enumerate(self.model.layers):    
+        for i, layer in enumerate(self.model.model.layers):    
             if i in self.wrapper_mapping:
                 self.wrapper_mapping[i].print_stats(i)
             else:
