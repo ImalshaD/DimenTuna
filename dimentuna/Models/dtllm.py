@@ -31,6 +31,8 @@ class DTHfLLM(DTHfEncoder):
         self.to()
         
     def get_Layer_output(self, texts, layer_idx, pooling_strategy=None, custom_function: Optional[Callable] = None):
+        
+        layer_idx +=1 # TODO: Check if this is correct
         inputs = self.tokenize(texts)
         
         outputs = self.model(**inputs, output_hidden_states=True)
