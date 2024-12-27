@@ -173,8 +173,7 @@ class TwoPhasedTS(DTTrainStratergy):
                 encoded_data = self.encoder.encode(batch,"mean")
                 llm_embeddings = self.llm.get_Layer_output(batch, layer_idx, "mean")
 
-                mapped_data = wrapper(llm_embeddings)
-                projected_data = self.projector(mapped_data)
+                projected_data = self.projector(llm_embeddings)
                 
                 loss = self.criteria(projected_data, encoded_data)
                 loss.backward()
@@ -204,8 +203,7 @@ class TwoPhasedTS(DTTrainStratergy):
             llm_embeddings = self.llm.get_Layer_output(batch, layer_idx, "mean")
             
             with torch.no_grad():
-                mapped_data = wrapper(llm_embeddings)
-                projected_data = self.projector(mapped_data)
+                projected_data = self.projector(llm_embeddings)
             loss = self.criteria(encoded_data, projected_data)
             total_loss += loss.item()
         
@@ -247,9 +245,8 @@ class MixedTS(DTTrainStratergy):
                 
                 encoded_data = self.encoder.encode(batch,"mean")
                 llm_embeddings = self.llm.get_Layer_output(batch, layer_idx, "mean")
-                
-                mapped_data = wrapper(llm_embeddings)
-                projected_data = self.projector(mapped_data)
+    
+                projected_data = self.projector(llm_embeddings)
                 
                 loss = self.criteria(encoded_data, projected_data)
                 loss.backward()
