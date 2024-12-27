@@ -10,7 +10,7 @@ class LayerWrappebleDTHfLLM(DTHfLLM):
     def replace_layer(self, layer_idx : int, layer_wrapper : DTLayerWrapper):
         original_layer = self.model.model.layers[layer_idx]
         layer_wrapper.set_layer(original_layer)
-        self.model.layers[layer_idx] = layer_wrapper
+        self.model.model.layers[layer_idx] = layer_wrapper
         self.wrapper_mapping[layer_idx] = layer_wrapper
     
     def engage_layer_wrapper(self, layer_idx : int| None = None, status : bool = True):
