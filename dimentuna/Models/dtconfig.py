@@ -27,6 +27,8 @@ class DTConfig:
         self.padding_side = padding_side
         self.template = template
 
+        self.create_directories()
+
     def create_directories(self):
         if not os.path.exists(self.cache_dir):
             os.makedirs(self.cache_dir)
