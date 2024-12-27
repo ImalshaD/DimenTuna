@@ -36,7 +36,7 @@ class DTTrainStratergy(ABC):
         self.target_layers = target_layers
     
     def print_status(self):
-        is_encoder_frozen = not any(p.requires_grad for p in self.encoder.parameters())
+        is_encoder_frozen = not any(p.requires_grad for p in self.encoder.model.parameters())
         is_projector_frozen = not any(p.requires_grad for p in self.projector.parameters())
         print(f"Encoder_Frozen: {is_encoder_frozen}")
         print(f"Projector_Frozen: {is_projector_frozen}")
