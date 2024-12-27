@@ -1,5 +1,5 @@
 from Models import DTHfEncoder, LayerWrappebleDTHfLLM
-from Projectors import DTProjector
+from ..Projectors import DTProjector
 from .dttrainstrat import DTTrainStratergy
 
 class DTTrainer:

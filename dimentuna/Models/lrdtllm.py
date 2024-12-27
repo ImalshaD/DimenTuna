@@ -1,6 +1,6 @@
 from .dtconfig import DTConfig
 from .dtllm import DTHfLLM
-from Utils import DTLayerWrapper
+from ..Utils import DTLayerWrapper
 
 class LayerWrappebleDTHfLLM(DTHfLLM):
     def __init__(self, config: DTConfig):

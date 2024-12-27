@@ -4,6 +4,8 @@ from .dtencoder import DTHfEncoder
 import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM
 
+from typing import Optional, Callable
+
 class DTHfLLM(DTHfEncoder):
 
     def __init__(self, config: DTConfig):
@@ -26,7 +28,7 @@ class DTHfLLM(DTHfEncoder):
             "temperature": config.temperature
         }
         
-    def get_Layer_output(self, texts, layer_idx, pooling_strategy=None, custom_function: None | callable = None):
+    def get_Layer_output(self, texts, layer_idx, pooling_strategy=None, custom_function: Optional[Callable] = None):
         inputs = self.tokenize(texts)
         with torch.no_grad():
             outputs = self.model(**inputs, output_hidden_states=True)

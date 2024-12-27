@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 
 from abc import ABC, abstractmethod
-from Mappers import DTMapper
+from ..Mappers import DTMapper
 
 class DTLayerWrapper(ABC, nn.Module):
     

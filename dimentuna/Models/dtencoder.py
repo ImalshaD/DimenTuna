@@ -3,6 +3,8 @@ from .dtconfig import DTConfig
 import torch
 from transformers import AutoTokenizer, AutoModel
 
+from typing import Optional, Callable
+
 class DTHfEncoder:
     
     def __init__(self, config: DTConfig):
@@ -48,7 +50,7 @@ class DTHfEncoder:
         inputs = {k: v.to(self.device) for k, v in inputs.items()}
         return inputs
     
-    def encode(self, texts, pooling_strategy=None, custom_function: None | callable = None):
+    def encode(self, texts, pooling_strategy=None, custom_function: Optional[Callable]= None):
         inputs = self.tokenize(texts)
         with torch.no_grad():
             outputs = self.model(**inputs)

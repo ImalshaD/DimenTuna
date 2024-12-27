@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
-from Projectors import DTProjector
-from Models import DTHfEncoder, LayerWrappebleDTHfLLM
+from ..Projectors import DTProjector
+from ..Models import DTHfEncoder, LayerWrappebleDTHfLLM
 from tqdm import tqdm
 import torch
 
