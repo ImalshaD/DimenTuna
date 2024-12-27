@@ -98,6 +98,7 @@ class TwoPhasedTS(DTTrainStratergy):
         
         self.projector.train()
         self.llm.freeze()
+        self.encoder.freeze()
         self.llm.engage_layer_wrapper(layer_idx, status=False)
 
         self.print_status()
@@ -129,6 +130,7 @@ class TwoPhasedTS(DTTrainStratergy):
         
         self.projector.eval()
         self.llm.freeze()
+        self.encoder.freeze()
 
 
         total_loss = 0.0
@@ -148,6 +150,7 @@ class TwoPhasedTS(DTTrainStratergy):
     def train_mapper(self, epochs : int, layer_idx, **kwargs):
         
         self.llm.freeze()
+        self.encoder.freeze()
         self.freeze_projector()
         
         wrapper = self.llm.ready2train(layer_idx)
@@ -186,6 +189,7 @@ class TwoPhasedTS(DTTrainStratergy):
     def evaluate_mapper(self, layer_idx, loader):
         
         self.llm.freeze()
+        self.encoder.freeze()
         self.freeze_projector()
         
         wrapper = self.llm.ready2train(layer_idx)
@@ -223,6 +227,7 @@ class MixedTS(DTTrainStratergy):
     def train_layer(self, epochs, layer_idx):
         
         self.llm.freeze()
+        self.encoder.freeze()
         wrapper = self.llm.ready2train(layer_idx)
 
         optimizer = torch.optim.Adam(list(wrapper.parameters()) + list(self.projector.parameters()), lr=self.lr)
@@ -258,6 +263,7 @@ class MixedTS(DTTrainStratergy):
     def eval_layer(self, layer_idx, loader):
         
         self.llm.freeze()
+        self.encoder.freeze()
         wrapper = self.llm.ready2train(layer_idx)
 
         wrapper.eval()
