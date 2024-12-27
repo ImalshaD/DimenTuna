@@ -123,6 +123,8 @@ class TwoPhasedTS(DTTrainStratergy):
 
                 total_loss += loss.item()
 
+            del llm_embeddings, projected_data, encoded_data 
+            torch.cuda.empty_cache()
             total_loss /= len(self.train_loader)
             eval_loss = self.evaluate_projector(layer_idx, self.val_loader)
             print(f"Epoch {epoch} : Loss {total_loss} Eval Loss {eval_loss}")
@@ -145,6 +147,8 @@ class TwoPhasedTS(DTTrainStratergy):
             loss = self.criteria(encoded_data, projected_data)
             total_loss += loss.item()
         
+        del llm_embeddings, projected_data, encoded_data
+        torch.cuda.empty_cache()
         total_loss /= len(loader)
         return total_loss
 
@@ -183,6 +187,9 @@ class TwoPhasedTS(DTTrainStratergy):
 
                 total_loss += loss.item()
 
+            del llm_embeddings, projected_data, encoded_data
+            torch.cuda.empty_cache()
+
             total_loss /= len(self.mapper_train_loader)
             eval_loss = self.evaluate_mapper(layer_idx, self.mapper_val_loader)
             print(f"Epoch {epoch} : Loss {total_loss} Eval Loss {eval_loss}")
@@ -208,6 +215,8 @@ class TwoPhasedTS(DTTrainStratergy):
             loss = self.criteria(encoded_data, projected_data)
             total_loss += loss.item()
         
+        del llm_embeddings, projected_data, encoded_data
+        torch.cuda.empty_cache()
         total_loss /= len(loader)
         return total_loss
     
@@ -254,6 +263,9 @@ class MixedTS(DTTrainStratergy):
                 optimizer.step()
 
                 total_loss += loss.item()
+            
+            del llm_embeddings, projected_data, encoded_data
+            torch.cuda.empty_cache()
             
             total_loss /= len(self.train_loader)
             eval_loss = self.eval_layer(layer_idx, self.val_loader)
