@@ -43,13 +43,19 @@ class FeedForwardProjector(DTProjector):
         
     
     def forward(self, x):
-        if self.pooler_type == 'mean':
-            x = torch.mean(x, dim=1)
-        elif self.pooler_type == 'max':
-            x = torch.max(x, dim=1)
-        elif self.pooler_function is not None:
-            x = self.pooler_function(x)
-
+        
+        if x.dim() == 3:
+            
+            if self.pooler_type == 'mean':
+                x = x.mean(dim=1)
+            elif self.pooler_type == 'max':
+                x = x.max(dim=1)
+            elif self.pooler_type == "pooler":
+                x = x[:,0,:]
+            elif self.pooler_function is not None:
+                x = self.pooler_function(x)
+            else:
+                raise ValueError(f"Invalid Pooler Type {self.pooler_type}")
         assert x.shape[1] == self.input_dim, f"Input dimension mismatch. Expected {self.input_dim} but got {x.shape[1]}"
         
         x = self.network(x)
