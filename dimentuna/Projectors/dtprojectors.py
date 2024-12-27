@@ -50,7 +50,7 @@ class FeedForwardProjector(DTProjector):
         elif self.pooler_function is not None:
             x = self.pooler_function(x)
 
-        assert x.shape[2] == self.input_dim, f"Input dimension mismatch. Expected {self.input_dim} but got {x.shape[2]}"
+        assert x.shape[1] == self.input_dim, f"Input dimension mismatch. Expected {self.input_dim} but got {x.shape[1]}"
         
         x = self.network(x)
 
