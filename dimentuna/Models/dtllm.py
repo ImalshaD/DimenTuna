@@ -32,9 +32,9 @@ class DTHfLLM(DTHfEncoder):
         
     def get_Layer_output(self, texts, layer_idx, pooling_strategy=None, custom_function: Optional[Callable] = None):
         inputs = self.tokenize(texts)
-        with torch.no_grad():
-            outputs = self.model(**inputs, output_hidden_states=True)
-            layer_output = outputs.hidden_states[layer_idx]
+        
+        outputs = self.model(**inputs, output_hidden_states=True)
+        layer_output = outputs.hidden_states[layer_idx]
         
         if pooling_strategy is None and custom_function is None:
             return layer_output

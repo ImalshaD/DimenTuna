@@ -171,6 +171,7 @@ class TwoPhasedTS(DTTrainStratergy):
                 
                 
                 encoded_data = self.encoder.encode(batch,"mean")
+                
                 llm_embeddings = self.llm.get_Layer_output(batch, layer_idx, "mean")
 
                 projected_data = self.projector(llm_embeddings)
