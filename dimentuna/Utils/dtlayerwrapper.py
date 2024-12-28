@@ -55,18 +55,16 @@ class LinearWrapper(DTLayerWrapper):
         
         layer_output = self.layer(hidden_states, attention_mask=attention_mask, **kwargs)
         
-        beta = self.tanh(self.alpha) # Makes sure that beta is between -1 and 1
-        
         if isinstance(layer_output, tuple):
-            modified_hidden_states = layer_output[0] + beta * self.mapper(layer_output[0])
+            modified_hidden_states = layer_output[0] + self.mapper(layer_output[0])
             return (modified_hidden_states,) + layer_output[1:]
         else:
-            return layer_output + beta * self.mapper(layer_output)
+            return layer_output + self.mapper(layer_output)
     
     def print_stats(self, layer_idx):
         super().print_stats(layer_idx)
         alpha_forzen = not self.alpha.requires_grad
-        print(f"---Alpha_Frozen: {alpha_forzen} Valie: {self.alpha.item()} ")
+        print(f"---Alpha_Frozen: {alpha_forzen} Value: {self.alpha.item()} Not Used")
     
     def view_alpha(self):
         return self.alpha.item()

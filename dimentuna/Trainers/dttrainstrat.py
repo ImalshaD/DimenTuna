@@ -125,6 +125,7 @@ class TwoPhasedTS(DTTrainStratergy):
 
             del llm_embeddings, projected_data, encoded_data 
             torch.cuda.empty_cache()
+            
             total_loss /= len(self.train_loader)
             eval_loss = self.evaluate_projector(layer_idx, self.val_loader)
             print(f"Epoch {epoch} : Loss {total_loss} Eval Loss {eval_loss}")
@@ -149,6 +150,7 @@ class TwoPhasedTS(DTTrainStratergy):
         
         del llm_embeddings, projected_data, encoded_data
         torch.cuda.empty_cache()
+
         total_loss /= len(loader)
         return total_loss
 
