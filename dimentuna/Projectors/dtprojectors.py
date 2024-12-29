@@ -78,7 +78,7 @@ class LSTMProjector(DTProjector):
     def forward(self, x):
         
         x, (hidden, cell) = self.lstm(x)
-        output = self.fc(hidden)
+        output = self.fc(hidden).squeeze(0)
 
         return output
 

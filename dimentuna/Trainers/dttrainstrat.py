@@ -116,7 +116,7 @@ class TwoPhasedTS(DTTrainStratergy):
                 llm_embeddings = self.llm_layer_output(batch, layer_idx)
                 
                 projected_data = self.projector(llm_embeddings)
-                loss = self.criteria(encoded_data, projected_data)
+                loss = self.criteria(projected_data, encoded_data)
                 
                 loss.backward()
                 self.projector_optimizer.step()
@@ -145,7 +145,7 @@ class TwoPhasedTS(DTTrainStratergy):
             
             with torch.no_grad():
                 projected_data = self.projector(llm_embeddings)
-            loss = self.criteria(encoded_data, projected_data)
+            loss = self.criteria(projected_data, encoded_data)
             total_loss += loss.item()
         
         del llm_embeddings, projected_data, encoded_data
@@ -214,7 +214,7 @@ class TwoPhasedTS(DTTrainStratergy):
             
             with torch.no_grad():
                 projected_data = self.projector(llm_embeddings)
-            loss = self.criteria(encoded_data, projected_data)
+            loss = self.criteria(projected_data, encoded_data)
             total_loss += loss.item()
         
         del llm_embeddings, projected_data, encoded_data
@@ -277,7 +277,7 @@ class MixedTS(DTTrainStratergy):
     
                 projected_data = self.projector(llm_embeddings)
                 
-                loss = self.criteria(encoded_data, projected_data)
+                loss = self.criteria(projected_data, encoded_data)
                 loss.backward()
                 optimizer.step()
 
@@ -308,7 +308,7 @@ class MixedTS(DTTrainStratergy):
             with torch.no_grad():
                 mapped_data = wrapper(llm_embeddings)
                 projected_data = self.projector(mapped_data)
-            loss = self.criteria(encoded_data, projected_data)
+            loss = self.criteria(projected_data, encoded_data)
             total_loss += loss.item()
         
         total_loss /= len(loader)
