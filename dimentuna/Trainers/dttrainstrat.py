@@ -84,7 +84,7 @@ class DTTrainStratergy(ABC):
 class TwoPhasedTS(DTTrainStratergy):
 
     def __init__(self, llm, encoder, projector, train_loader, val_loader, lr, device, target_layers,
-                 mapper_train_loader, mapper_val_loader,  enable_dp : bool = False, gpu_ids=None,
+                 mapper_train_loader, mapper_val_loader, layer_shift : int = 0 , enable_dp : bool = False, gpu_ids=None,
                  **kwargs):
         super().__init__(llm, encoder, projector, train_loader, val_loader, lr, device, target_layers, 
                             enable_dp, gpu_ids, **kwargs)
@@ -94,6 +94,7 @@ class TwoPhasedTS(DTTrainStratergy):
 
         self.projector_optimizer = torch.optim.Adam(self.projector.parameters(), lr=lr)
         self.criteria = torch.nn.MSELoss()
+        self.layer_shift = layer_shift
         
     def train_projector(self, epochs : int, layer_idx ,**kwargs):
         
@@ -232,12 +233,13 @@ class TwoPhasedTS(DTTrainStratergy):
         return self.encoder.encode(text, "mean")
     
     def llm_layer_output(self, text, layer_idx):
+        layer_idx += self.layer_shift
         return self.llm.get_Layer_output(text, layer_idx, "mean")
 
 class TwoPhasedSeq2SeqTS(TwoPhasedTS):
 
-    def __init__(self, llm, encoder, projector, train_loader, val_loader, lr, device, target_layers, mapper_train_loader, mapper_val_loader, enable_dp = False, gpu_ids=None, **kwargs):
-        super().__init__(llm, encoder, projector, train_loader, val_loader, lr, device, target_layers, mapper_train_loader, mapper_val_loader, enable_dp, gpu_ids, **kwargs)
+    def __init__(self, llm, encoder, projector, train_loader, val_loader, lr, device, target_layers, mapper_train_loader, mapper_val_loader, layer_shift = 0, enable_dp = False, gpu_ids=None, **kwargs):
+        super().__init__(llm, encoder, projector, train_loader, val_loader, lr, device, target_layers, mapper_train_loader, mapper_val_loader, layer_shift, enable_dp, gpu_ids, **kwargs)
     
     def get_encoder_output(self, text):
         return self.encoder.encode(text, "cls")
