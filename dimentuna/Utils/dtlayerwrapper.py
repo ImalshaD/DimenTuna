@@ -20,6 +20,9 @@ class DTLayerWrapper(ABC, nn.Module):
         print(f"---Mapper_Frozen: {mapper_forzen}")
         print(f"---Engaged: {self.engage_status}")
     
+    def __repr__(self):
+        return super().__repr__()+ f"Engaged: {self.engage_status}"
+    
     def set_layer(self, layer : nn.Module):
         self.layer = layer
     
