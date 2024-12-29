@@ -59,7 +59,15 @@ class LayerWrappebleDTHfLLM(DTHfLLM):
         return self.wrapper_mapping[layer_idx].get_engage_status()
     
     def print_status(self):
-        print(self.__repr__())
+        print("-LLM")
+        for i, layer in enumerate(self.model.model.layers):    
+            if i in self.wrapper_mapping:
+                self.wrapper_mapping[i].print_stats(i)
+            else:
+                print(f"--Layer_{i}")
+                print(f"---Layer_Frozen: {not any(p.requires_grad for p in layer.parameters())}")
+        
+        print(self.model.__repr__())
                 
     
 
