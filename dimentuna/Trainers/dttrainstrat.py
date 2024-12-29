@@ -98,7 +98,6 @@ class TwoPhasedTS(DTTrainStratergy):
         
     def train_projector(self, epochs : int, layer_idx ,**kwargs):
         
-        self.projector.train()
         self.llm.freeze()
         self.encoder.freeze()
         self.llm.engage_layer_wrapper(layer_idx, status=False)
@@ -170,6 +169,7 @@ class TwoPhasedTS(DTTrainStratergy):
         for epoch in range(epochs):
             
             wrapper.train()
+            self.projector.train()
             total_loss = 0.0
 
             for i, batch in enumerate(tqdm(self.mapper_train_loader, desc=f"Epoch {epoch}")):
@@ -206,6 +206,7 @@ class TwoPhasedTS(DTTrainStratergy):
         wrapper = self.llm.ready2train(layer_idx)
 
         wrapper.eval()
+        self.projector.eval()
         
         total_loss = 0.0
         for i, batch in enumerate(tqdm(loader)):
