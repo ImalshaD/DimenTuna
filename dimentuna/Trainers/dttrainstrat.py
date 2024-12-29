@@ -234,7 +234,7 @@ class TwoPhasedTS(DTTrainStratergy):
     def llm_layer_output(self, text, layer_idx):
         return self.llm.get_Layer_output(text, layer_idx, "mean")
 
-class TwoPhasedSeq2SeqTS(DTTrainStratergy):
+class TwoPhasedSeq2SeqTS(TwoPhasedTS):
     
     def __init__(self, llm, encoder, projector, train_loader, val_loader, lr, device, target_layers, enable_dp = False, gpu_ids=None, **kwargs):
         super().__init__(llm, encoder, projector, train_loader, val_loader, lr, device, target_layers, enable_dp, gpu_ids, **kwargs)

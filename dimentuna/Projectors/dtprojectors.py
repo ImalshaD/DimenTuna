@@ -64,7 +64,7 @@ class FeedForwardProjector(DTProjector):
         return x
 
 class LSTMProjector(DTProjector):
-    def __init__(self, input_dim ,hidden_dim, output_dim, num_layers=1, bidirectional=False):
+    def __init__(self, input_dim ,output_dim, hidden_dim, num_layers=1, bidirectional=False):
         super(LSTMProjector, self).__init__()
         
         self.input_dim = input_dim
