@@ -76,13 +76,11 @@ class LSTMProjector(DTProjector):
         self.tanh = nn.Tanh()
     
     def forward(self, x):
-
-        assert x.shape[2] == self.input_dim, f"Input dimension mismatch. Expected {self.input_dim} but got {x.shape[2]}"
         
-        x, _ = self.lstm(x)
-        x = self.fc(x)
+        x, (hidden, cell) = self.lstm(x)
+        output = self.fc(hidden)
 
-        return x
+        return output
 
 class TransformerProjector(DTProjector):
     def __init__(self, input_dim, hidden_dim, output_dim, num_layers=1, num_heads=4, dim_feedforward=512, dropout=0.1):
