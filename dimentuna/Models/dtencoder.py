@@ -34,6 +34,8 @@ class DTHfEncoder:
             self.model.to(device)
 
     def enableDP(self, gpu_ids=None):
+        if self.device == torch.device('cpu'):
+            raise ValueError("Device is CPU. Can't use DataParallel")
         self.model = torch.nn.DataParallel(self.model, device_ids=gpu_ids)
     
     def get_embeddings_size(self):
