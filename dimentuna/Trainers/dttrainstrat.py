@@ -246,6 +246,7 @@ class TwoPhasedSeq2SeqTS(TwoPhasedTS):
         return self.encoder.encode(text, "cls")
     
     def llm_layer_output(self, text, layer_idx):
+        layer_idx += self.layer_shift
         return self.llm.get_Layer_output(text, layer_idx)
 
 class MixedTS(DTTrainStratergy):
