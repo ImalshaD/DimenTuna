@@ -12,6 +12,7 @@ class DTCustomDataset(Dataset):
         self.features = features
         self.target = target
         self.template = template
+        self.target_appended_features = features + [target] if target is not None else features
     
     def __len__(self):
         return len(self.data)
@@ -21,8 +22,7 @@ class DTCustomDataset(Dataset):
         if self.template is not None:
             return self.template.format(**{col: self.data[col][idx] for col in self.features}), self.data[self.target][idx]
         else:
-            self.features.append(self.target)
-            return [self.data[col][idx] if self.data[col][idx] is not None else "Empty" for col in self.features]
+            return [self.data[col][idx] if self.data[col][idx] != None else "Empty" for col in self.target_appended_features]
     
 
 class DTDataset(ABC):

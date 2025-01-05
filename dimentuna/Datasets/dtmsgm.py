@@ -6,7 +6,7 @@ from tqdm import tqdm
 class DTMsgm(DTDataset):
     
     def __init__(self, cache_dir: str = None, batch_size: int = 1):
-        system_prompt = "Please reason step by step, and put your final answer number in a newline within square brackets."
+        system_prompt = "Please put your final answer number in a newline within square brackets."
         super().__init__(cache_dir, system_prompt,batch_size)
     
     def get_dataset(self, language: str):
@@ -68,6 +68,7 @@ class DTMsgm(DTDataset):
         dataloader = self.get_dataloader(language, split, features, target, batch_size=batch_size)
 
         for batch in dataloader:
+            
             queries, targets = batch
             generation = model.generate(queries, system_prompt=self.system_prompt)
             
