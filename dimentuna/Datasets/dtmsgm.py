@@ -55,7 +55,7 @@ class DTMsgm(DTDataset):
         for batch in  tqdm(dataloader, desc=f"Evaluating {language}"):
             queries, targets = batch
             generation = model.generate(queries, system_prompt=self.system_prompt)
-            metrics = self.calculate_metrics(generation, targets)
+            metrics = self.calculate_metrics(generation, targets, **kwargs)
             results = self.update_results(results, metrics)
         
         return self.divide_results(results, len(dataloader))
