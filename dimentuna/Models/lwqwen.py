@@ -4,7 +4,7 @@ import torch
 
 class LayerWrappebleQwen(LayerWrappebleDTHfLLM):
 
-    def __init__(self, max_generation_length: int = 256, 
+    def __init__(self, max_generation_length: int = 512, 
                  do_sample: bool =  False, 
                  temperature: float = 0.7,
                  device: torch.device = None):
@@ -31,6 +31,7 @@ class LayerWrappebleQwen(LayerWrappebleDTHfLLM):
         super().__init__(qwen_config)
     
     def applyTemplate(self, texts, **kwargs):
+        
         system_prompt = kwargs.get("system_prompt", None)
         
         if system_prompt is None:
