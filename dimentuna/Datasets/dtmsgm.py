@@ -27,11 +27,12 @@ class DTMsgm(DTDataset):
         return matches[-1] if len(matches) > 0 else "Empty Answer"
 
     def calculate_metrics(self, generation, target, **kwargs):
-        
+        logging = kwargs.get("logging", False)
         correct = 0
         for response, correct_ans in zip(generation, target):
             answer = self.extract_answer(response)
-            
+            if logging:
+                print(f"answer: {answer}, correct: {correct_ans} correctness: {answer == str(correct_ans)}")
             if answer == str(correct_ans):
                 correct += 1
         
@@ -78,7 +79,7 @@ class DTMsgm(DTDataset):
             extracted_answers = [self.extract_answer(response) for response in generation]
             
             for query, target, gen, ex_ans in zip(queries, targets, generation, extracted_answers):
-                print( f"""Query: {query} \n Correct Answer: {target} \n Generated Answer: {gen} \nExtracted Answer: {ex_ans}""")
+                print( f"""Query: {query} \n Correct Answer: {target} \n Generated Answer: {gen} \n Extracted Answer: {ex_ans} \n""")
             break
     
     
