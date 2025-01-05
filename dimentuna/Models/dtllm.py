@@ -27,7 +27,12 @@ class DTHfLLM(DTHfEncoder):
             "temperature": config.temperature
         }
 
+        self.system_prompt = None
+
         self.to()
+    
+    def set_system_prompt(self, system_prompt: str):
+        self.system_prompt = system_prompt
     
     def change_best_config(self, max_generation_length: int = None, do_sample: bool = None, temperature: float = None, **kwargs):
         

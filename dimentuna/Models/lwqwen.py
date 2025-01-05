@@ -39,7 +39,7 @@ class LayerWrappebleQwen(LayerWrappebleDTHfLLM):
         system_prompt = kwargs.get("system_prompt", None)
         
         if system_prompt is None:
-            raise ValueError("system_prompt is required for Qwen")
+            system_prompt = self.system_prompt
 
         batch_messages = [
             [
