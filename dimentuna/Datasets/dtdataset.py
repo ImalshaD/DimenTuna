@@ -75,11 +75,11 @@ class DTDataset(ABC):
             return [self.get_dataloader(language, split, columns, batch_size) for split in splits]
     
     def update_results(self, results: dict, batch_results: dict):
-        for key, value in batch_results:
+        for key in batch_results:
             if key in results:
-                results[key] += value
+                results[key] += batch_results[key]
             else:
-                results[key] = value
+                results[key] = batch_results[key]
         return results
 
     def divide_results(self, results: dict, n: int):
