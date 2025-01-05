@@ -15,7 +15,7 @@ class LayerWrappebleQwen(LayerWrappebleDTHfLLM):
         qwen_config = DTConfig(
             model_name="Qwen/Qwen2.5-1.5B-Instruct",
             cache_dir="./cache",          # Path to cache directory
-            max_tokens=2048,               # Maximum token limit
+            max_tokens=None,               # Maximum token limit
             temperature=temperature,              # Sampling temperature
             max_generation_length=max_generation_length,    # Maximum length for generated text
             do_sample=do_sample,               # Enable sampling
