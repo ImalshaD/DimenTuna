@@ -68,6 +68,9 @@ class DTHfLLM(DTHfEncoder):
         else:
             raise ValueError("Invalid pooling strategy or custom function")
         
+        del inputs, outputs
+        torch.cuda.empty_cache()
+        
         return layer_output
     
     def generate(self, texts,**kwargs):

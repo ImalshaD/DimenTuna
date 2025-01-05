@@ -79,6 +79,9 @@ class DTHfEncoder:
             embeddings = custom_function(embeddings)
         else:
             raise ValueError(f"Pooling strategy {pooling_strategy} not supported")
+
+        del inputs, outputs
+        torch.cuda.empty_cache()
         return embeddings
     
 
