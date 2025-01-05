@@ -69,6 +69,6 @@ class DTHfLLM(DTHfEncoder):
         inputs = self.tokenize(texts, **kwargs)
         with torch.no_grad():
             generated_ids = self.model.generate(**inputs, **self.best_config)
-            outputs = [output_ids[len(input_ids):] for input_ids, output_ids in zip(inputs.input_ids, generated_ids)]
+            outputs = [output_ids[len(input_ids):] for input_ids, output_ids in zip(inputs["input_ids"], generated_ids)]
             generated_texts = self.tokenizer.batch_decode(outputs, skip_special_tokens=True)
         return generated_texts
