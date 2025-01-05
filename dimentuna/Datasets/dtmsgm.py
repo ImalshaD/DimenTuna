@@ -32,8 +32,8 @@ class DTMsgm(DTDataset):
         for response, correct_ans in zip(generation, target):
             answer = self.extract_answer(response)
             if logging:
-                print(f"answer: {answer}, correct: {correct_ans} correctness: {answer == str(correct_ans)}")
-            if answer == str(correct_ans):
+                print(f"answer: {answer}, correct: {correct_ans} correctness: {answer.strip() == str(correct_ans)}")
+            if answer.strip() == str(correct_ans):
                 correct += 1
         
         return {"accuracy": correct/len(generation)}
