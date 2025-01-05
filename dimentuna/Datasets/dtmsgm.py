@@ -21,14 +21,18 @@ class DTMsgm(DTDataset):
         dataset = self.get_dataset(language)
         return dataset.column_names
     
+    def extract_answer(self, response):
+        pattern = r"\[(.*?)\]"
+        matches = re.findall(pattern, response)
+        return matches[-1] if len(matches) > 0 else "Empty Answer"
+
     def calculate_metrics(self, generation, target, **kwargs):
         
         correct = 0
-        pattern = r"\[(.*?)\]"
-        
         for response, correct_ans in zip(generation, target):
-            matches = re.findall(pattern, response)
-            if len(matches) > 0 and matches[-1] == str(correct_ans):
+            answer = self.extract_answer(response)
+            
+            if answer == str(correct_ans):
                 correct += 1
         
         return {"accuracy": correct/len(generation)}
@@ -71,13 +75,10 @@ class DTMsgm(DTDataset):
             
             queries, targets = batch
             generation = model.generate(queries, system_prompt=self.system_prompt)
+            extracted_answers = [self.extract_answer(response) for response in generation]
             
-            for query, target, gen in zip(queries, targets, generation):
-                print( f"""
-                Query: {query}
-                Correct Answer: {target}
-                Generated Answer: {gen}
-                """)
+            for query, target, gen, ex_ans in zip(queries, targets, generation, extracted_answers):
+                print( f"""Query: {query} \n Correct Answer: {target} \n Generated Answer: {gen} \nExtracted Answer: {ex_ans}""")
             break
     
     

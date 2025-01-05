@@ -29,6 +29,10 @@ class LayerWrappebleQwen(LayerWrappebleDTHfLLM):
             return_dict=True,             # Return output as dictionary
         )
         super().__init__(qwen_config)
+
+        self.best_config = {
+            "max_length": max_generation_length
+        }
     
     def applyTemplate(self, texts, **kwargs):
         

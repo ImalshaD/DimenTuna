@@ -92,10 +92,5 @@ class DTXNLI(DTDataset):
             generated_labels = [self._get_lable(g) for g in generation]
             
             for q, l, g, gl in zip(queries, labels, generation ,generated_labels):
-                print(f"""
-                query: {q}
-                target: {l}
-                generated: {g}
-                generated label: {gl}
-                """)
+                print(f"""query: {q} \n target: {l} \n generated: {g} \n generated label: {gl}""")
             break
