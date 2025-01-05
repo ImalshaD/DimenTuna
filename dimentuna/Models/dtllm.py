@@ -11,7 +11,6 @@ class DTHfLLM(DTHfEncoder):
     def __init__(self, config: DTConfig):
         self.tokenizer : AutoTokenizer = AutoTokenizer.from_pretrained(config.model_name, cache_dir=config.cache_dir, padding_side=config.padding_side)
         self.model : AutoModelForCausalLM = AutoModelForCausalLM.from_pretrained(config.model_name, cache_dir=config.cache_dir)
-        
         self.device = config.device
 
         self.max_tokens = config.max_tokens
@@ -29,6 +28,20 @@ class DTHfLLM(DTHfEncoder):
         }
 
         self.to()
+    
+    def change_best_config(self, max_generation_length: int = None, do_sample: bool = None, temperature: float = None, **kwargs):
+        
+        best_config = {
+            "max_length": max_generation_length if max_generation_length is not None else self.best_config["max_length"],
+            "do_sample": do_sample if do_sample is not None else self.best_config["do_sample"],
+            "temperature": temperature if temperature is not None else self.best_config["temperature"]
+        }
+        best_config.update(kwargs)
+        self.best_config = best_config
+    
+    def print_best_config(self):
+        print(self.best_config)
+        
         
     def get_Layer_output(self, texts, layer_idx, pooling_strategy=None, custom_function: Optional[Callable] = None):
         
@@ -52,9 +65,10 @@ class DTHfLLM(DTHfEncoder):
         
         return layer_output
     
-    def generate(self, texts):
-        inputs = self.tokenize(texts)
+    def generate(self, texts,**kwargs):
+        inputs = self.tokenize(texts, **kwargs)
         with torch.no_grad():
-            outputs = self.model.generate(**inputs, **self.best_config)
+            generated_ids = self.model.generate(**inputs, **self.best_config)
+            outputs = [output_ids[len(input_ids):] for input_ids, output_ids in zip(inputs.input_ids, generated_ids)]
             generated_texts = self.tokenizer.batch_decode(outputs, skip_special_tokens=True)
         return generated_texts

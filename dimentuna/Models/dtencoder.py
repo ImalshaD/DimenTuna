@@ -44,13 +44,13 @@ class DTHfEncoder:
     def getEmbedding_shape(self):
         return (self.max_tokens,self.embedding_size)
     
-    def applyTemplate(self,texts):
+    def applyTemplate(self,texts, **kwargs):
         if self.template is not None:
             return [self.template.format(text=text) for text in texts]
         return texts
     
-    def tokenize(self, texts):
-        texts = self.applyTemplate(texts)
+    def tokenize(self, texts, **kwargs):
+        texts = self.applyTemplate(texts, **kwargs)
         inputs = self.tokenizer(texts, max_length=self.max_tokens, padding=self.padding, truncation=self.truncation, return_tensors="pt")
         inputs = {k: v.to(self.device) for k, v in inputs.items()}
         return inputs

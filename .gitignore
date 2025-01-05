@@ -3,3 +3,5 @@ poetry.lock
 __pycache__/
 dist
 test.ipynb
+notebooks/qwen*.ipynb
+*cache
