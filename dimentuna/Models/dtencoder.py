@@ -51,7 +51,10 @@ class DTHfEncoder:
     
     def tokenize(self, texts, **kwargs):
         texts = self.applyTemplate(texts, **kwargs)
-        inputs = self.tokenizer(texts, max_length=self.max_tokens, padding=self.padding, truncation=self.truncation, return_tensors="pt")
+        if self.max_tokens is not None:
+            inputs = self.tokenizer(texts, max_length=self.max_tokens, padding=self.padding, truncation=self.truncation, return_tensors="pt")
+        else:
+            inputs = self.tokenizer(texts, padding=self.padding, truncation=self.truncation, return_tensors="pt")
         inputs = {k: v.to(self.device) for k, v in inputs.items()}
         return inputs
     

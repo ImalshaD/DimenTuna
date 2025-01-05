@@ -3,7 +3,7 @@ import torch
 
 class DTConfig:
 
-    def __init__(self, model_name: str, cache_dir: str, max_tokens : int, 
+    def __init__(self, model_name: str, cache_dir: str, max_tokens : int= None, 
                  temperature : float = 0.7, max_generation_length : int= 512,
                 do_sample: bool=True, truncation: bool=True, padding : str|bool= True,
                 device : None |torch.device =None, use_best_config : bool=False, padding_side : str='right',

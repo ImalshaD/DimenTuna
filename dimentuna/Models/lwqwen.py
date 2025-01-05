@@ -23,7 +23,7 @@ class LayerWrappebleQwen(LayerWrappebleDTHfLLM):
             padding=True,                 # Enable padding
             device=device,  # Device configuration
             use_best_config=True,        # Use best configuration (custom logic)
-            padding_side='right',         # Padding side
+            padding_side='left',         # Padding side
             output_hidden_states=False,   # Output hidden states
             output_attentions=False,      # Output attention values
             return_dict=True,             # Return output as dictionary
