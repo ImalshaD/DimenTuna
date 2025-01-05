@@ -55,6 +55,30 @@ class DTMsgm(DTDataset):
         
         return self.divide_results(results, len(dataloader))
     
+    def print_sample(self, model, language, batch_size = None, **kwargs):
+        
+        if batch_size is None:
+            batch_size = self.batch_size
+
+        features = ["question"]
+        target = "answer_number"
+
+        split = "test"
+
+        dataloader = self.get_dataloader(language, split, features, target, batch_size=batch_size)
+
+        for batch in dataloader:
+            queries, targets = batch
+            generation = model.generate(queries, system_prompt=self.system_prompt)
+            
+            for query, target, gen in zip(queries, targets, generation):
+                print( f"""
+                Query: {query}
+                Correct Answer: {target}
+                Generated Answer: {gen}
+                """)
+            break
+    
     
     
         
