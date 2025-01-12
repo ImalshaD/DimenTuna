@@ -93,7 +93,7 @@ class TwoPhasedTS(DTTrainStratergy):
         self.mapper_val_loader = mapper_val_loader
 
         self.projector_optimizer = torch.optim.Adam(self.projector.parameters(), lr=lr)
-        self.criteria = torch.nn.KLDivLoss()
+        self.criteria = torch.nn.MSELoss()
         self.layer_shift = layer_shift
         
     def train_projector(self, epochs : int, layer_idx ,**kwargs):
