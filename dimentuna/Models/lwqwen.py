@@ -93,7 +93,7 @@ class LayerWrappebleQwen(LayerWrappebleDTHfLLM):
                     vec_results.append(0)
                     
             results.append(vec_results)
-        return results
+        return torch.tensor(results)
     
     def tokenize(self, texts, **kwargs):
         tokenized_texts = super().tokenize(texts, **kwargs)
