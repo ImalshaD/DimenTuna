@@ -98,12 +98,12 @@ class LayerWrappebleQwen(LayerWrappebleDTHfLLM):
     def tokenize(self, texts, **kwargs):
         tokenized_texts = super().tokenize(texts, **kwargs)
         user_mask = self.generate_user_mask(tokenized_texts)
-        tokenized_texts["user_mask"] = user_mask
+        tokenized_texts["attention_mask"] += user_mask
         return tokenized_texts
 
     def filterByUserMaskandDecode(self, tokenized_texts):
         input_ids = tokenized_texts["input_ids"]
-        user_mask = tokenized_texts["user_mask"]
+        user_mask = (tokenized_texts["attention_mask"]==2)
         results = []
         for vec, mask in zip(input_ids, user_mask):
             results.append([token for token, mask_val in zip(vec, mask) if mask_val==1])

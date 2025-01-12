@@ -1,7 +1,7 @@
 from .dtconfig import DTConfig
 
 import torch
-from transformers import AutoTokenizer, AutoModel
+from transformers import AutoTokenizer, AutoModel, Qwen2ForCausalLM
 
 from typing import Optional, Callable
 
