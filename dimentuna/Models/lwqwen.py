@@ -5,7 +5,9 @@ import torch
 
 class LayerWrappebleQwen(LayerWrappebleDTHfLLM):
 
-    def __init__(self, max_generation_length: int = 512, 
+    def __init__(self, 
+                 padding_side: str = 'left',
+                 max_generation_length: int = 512, 
                  do_sample: bool =  False, 
                  temperature: float = 0.7,
                  device: torch.device = None):
@@ -24,7 +26,7 @@ class LayerWrappebleQwen(LayerWrappebleDTHfLLM):
             padding=True,                 # Enable padding
             device=device,  # Device configuration
             use_best_config=True,        # Use best configuration (custom logic)
-            padding_side='left',         # Padding side
+            padding_side=padding_side,         # Padding side
             output_hidden_states=False,   # Output hidden states
             output_attentions=False,      # Output attention values
             return_dict=True,             # Return output as dictionary
