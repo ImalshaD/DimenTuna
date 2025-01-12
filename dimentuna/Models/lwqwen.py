@@ -1,5 +1,6 @@
 from .lrdtllm import LayerWrappebleDTHfLLM
 from .dtconfig import DTConfig
+from ..Utils import AttentionNormalise
 import torch
 
 class LayerWrappebleQwen(LayerWrappebleDTHfLLM):
@@ -36,6 +37,8 @@ class LayerWrappebleQwen(LayerWrappebleDTHfLLM):
 
         self.eos_token_id = 151645
         self.sos_token_id = 151644
+
+        self.normaliseAttention()
 
     def applyTemplate(self, texts, **kwargs):
         
@@ -108,3 +111,7 @@ class LayerWrappebleQwen(LayerWrappebleDTHfLLM):
         for vec, mask in zip(input_ids, user_mask):
             results.append([token for token, mask_val in zip(vec, mask) if mask_val==1])
         return self.tokenizer.batch_decode(results, skip_special_tokens=True)
+    
+    def normaliseAttention(self):
+        for i, layer in enumerate(self.model.model.layers):
+            self.model.model.layers[i] = AttentionNormalise(layer)

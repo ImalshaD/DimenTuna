@@ -45,6 +45,19 @@ class DTLayerWrapper(ABC, nn.Module):
             return self.forward_pass(hidden_states, attention_mask=attention_mask, **kwargs)
         else:
             return self.layer(hidden_states, attention_mask=attention_mask, **kwargs)
+
+
+class AttentionNormalise(nn.Module):
+    def __init__(self, layer : nn.Module):
+        super().__init__()
+        self.layer = layer
+
+    def forward(self, hidden_states, attention_mask=None, **kwargs):
+        attention_mask = (attention_mask > 0).int()
+        layer_output = self.layer(hidden_states, attention_mask=attention_mask, **kwargs)
+        return layer_output
+
+
         
 
 class LinearWrapper(DTLayerWrapper):
