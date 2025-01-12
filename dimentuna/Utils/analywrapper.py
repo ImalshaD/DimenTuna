@@ -32,3 +32,16 @@ class NoiseWrapper(DTLayerWrapper):
         if self.mapper is not None:
             for param in self.mapper.parameters():
                 param.requires_grad = not(freeze_mapper)
+
+class Observewrapper(DTLayerWrapper):
+
+    def __init__(self,layer = None):
+        mapper = None
+        super().__init__(mapper, layer)
+    
+    def forward_pass(self, hidden_states, attention_mask=None, **kwargs):
+        print(kwargs)
+        return hidden_states
+
+    def freeze(self):
+        pass

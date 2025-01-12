@@ -1,6 +1,7 @@
 from .dtlayerwrapper import DTLayerWrapper, LinearWrapper
-from .analywrapper import NoiseWrapper
+from .analywrapper import NoiseWrapper, Observewrapper
 
 __all__ = ['DTLayerWrapper', 
            'LinearWrapper', 
-           'NoiseWrapper']
+           'NoiseWrapper',
+           'Observewrapper']
