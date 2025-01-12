@@ -72,10 +72,10 @@ class LinearWrapper(DTLayerWrapper):
         layer_output = self.layer(hidden_states, attention_mask=attention_mask, **kwargs)
         
         if isinstance(layer_output, tuple):
-            modified_hidden_states = layer_output[0] + self.mapper(layer_output[0])
+            modified_hidden_states = self.mapper(layer_output[0])
             return (modified_hidden_states,) + layer_output[1:]
         else:
-            return layer_output + self.mapper(layer_output)
+            return self.mapper(layer_output)
     
     def print_stats(self, layer_idx):
         super().print_stats(layer_idx)
