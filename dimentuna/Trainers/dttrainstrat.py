@@ -95,7 +95,10 @@ class TwoPhasedTS(DTTrainStratergy):
         self.projector_optimizer = torch.optim.Adam(self.projector.parameters(), lr=lr)
         self.criteria = torch.nn.MSELoss()
         self.layer_shift = layer_shift
-        
+    
+    def compute_loss(self, projected_data, encoded_data):
+        return self.criteria(projected_data, encoded_data)
+    
     def train_projector(self, epochs : int, layer_idx ,**kwargs):
         
         self.llm.freeze()
@@ -116,7 +119,7 @@ class TwoPhasedTS(DTTrainStratergy):
                 llm_embeddings = self.llm_layer_output(batch, layer_idx)
                 
                 projected_data = self.projector(llm_embeddings)
-                loss = self.criteria(projected_data, encoded_data)
+                loss = self.compute_loss(projected_data, encoded_data)
                 
                 loss.backward()
                 self.projector_optimizer.step()
@@ -145,7 +148,7 @@ class TwoPhasedTS(DTTrainStratergy):
             
             with torch.no_grad():
                 projected_data = self.projector(llm_embeddings)
-            loss = self.criteria(projected_data, encoded_data)
+            loss = self.compute_loss(projected_data, encoded_data)
             total_loss += loss.item()
         
         del llm_embeddings, projected_data, encoded_data
@@ -183,7 +186,7 @@ class TwoPhasedTS(DTTrainStratergy):
 
                 projected_data = self.projector(llm_embeddings)
                 
-                loss = self.criteria(projected_data, encoded_data)
+                loss = self.compute_loss(projected_data, encoded_data)
                 loss.backward()
                 
                 optimizer.step()
@@ -216,7 +219,7 @@ class TwoPhasedTS(DTTrainStratergy):
             
             with torch.no_grad():
                 projected_data = self.projector(llm_embeddings)
-            loss = self.criteria(projected_data, encoded_data)
+            loss = self.compute_loss(projected_data, encoded_data)
             total_loss += loss.item()
         
         del llm_embeddings, projected_data, encoded_data
@@ -243,11 +246,25 @@ class TwoPhasedSeq2SeqTS(TwoPhasedTS):
         super().__init__(llm, encoder, projector, train_loader, val_loader, lr, device, target_layers, mapper_train_loader, mapper_val_loader, layer_shift, enable_dp, gpu_ids, **kwargs)
     
     def get_encoder_output(self, text):
-        return self.encoder.encode(text, "cls")
+        return self.encoder.encode(text, "mean")
     
     def llm_layer_output(self, text, layer_idx):
         layer_idx += self.layer_shift
         return self.llm.get_Layer_output(text, layer_idx)
+
+class TwoPhasedSeq2SeqKL(TwoPhasedTS):
+
+    def __init__(self, llm, encoder, projector, train_loader, val_loader, lr, device, target_layers, mapper_train_loader, mapper_val_loader, layer_shift = 0, enable_dp = False, gpu_ids=None, **kwargs):
+        super().__init__(llm, encoder, projector, train_loader, val_loader, lr, device, target_layers, mapper_train_loader, mapper_val_loader, layer_shift, enable_dp, gpu_ids, **kwargs)
+
+        self.criteria = torch.nn.KLDivLoss(reduction="batchmean")
+    
+    def compute_loss(self, projected_data, encoded_data):
+
+        probs_projected = torch.nn.functional.log_softmax(projected_data, dim=1)
+        probs_encoded = torch.nn.functional.softmax(encoded_data, dim=1)
+
+        return self.criteria(probs_projected, probs_encoded)
 
 class MixedTS(DTTrainStratergy):
 

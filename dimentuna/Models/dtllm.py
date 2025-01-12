@@ -2,7 +2,7 @@ from .dtconfig import DTConfig
 from .dtencoder import DTHfEncoder
 
 import torch
-from transformers import AutoTokenizer, AutoModelForCausalLM
+from transformers import AutoTokenizer, AutoModelForCausalLM, GPT2ForQuestionAnswering
 
 from typing import Optional, Callable
 
