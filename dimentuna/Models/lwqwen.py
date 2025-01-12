@@ -33,7 +33,10 @@ class LayerWrappebleQwen(LayerWrappebleDTHfLLM):
         self.best_config = {
             "max_length": max_generation_length
         }
-    
+
+        self.eos_token_id = 151645
+        self.sos_token_id = 151644
+
     def applyTemplate(self, texts, **kwargs):
         
         system_prompt = kwargs.get("system_prompt", None)
@@ -59,3 +62,49 @@ class LayerWrappebleQwen(LayerWrappebleDTHfLLM):
         ]
 
         return batch_texts
+    
+    
+    def generate_user_mask(self, tokenized_texts, **kwargs):
+        
+        input_ids = tokenized_texts["input_ids"]
+        results = []
+
+        for vec in input_ids:
+            
+            vec_results = []
+            
+            eos_count=0
+            sos_count=0
+            passes=0
+            
+            for token in vec:
+
+                if token == self.eos_token_id:
+                    eos_count+=1
+                    passes=0
+                elif token == self.sos_token_id:
+                    sos_count+=1
+                else:
+                    passes += 1
+
+                if sos_count==2 and passes>3:
+                    vec_results.append(1)
+                else:
+                    vec_results.append(0)
+                    
+            results.append(vec_results)
+        return results
+    
+    def tokenize(self, texts, **kwargs):
+        tokenized_texts = super().tokenize(texts, **kwargs)
+        user_mask = self.generate_user_mask(tokenized_texts)
+        tokenized_texts["user_mask"] = user_mask
+        return tokenized_texts
+
+    def filterByUserMaskandDecode(self, tokenized_texts):
+        input_ids = tokenized_texts["input_ids"]
+        user_mask = tokenized_texts["user_mask"]
+        results = []
+        for vec, mask in zip(input_ids, user_mask):
+            results.append([token for token, mask_val in zip(vec, mask) if mask_val==1])
+        return self.tokenizer.batch_decode(results, skip_special_tokens=True)
