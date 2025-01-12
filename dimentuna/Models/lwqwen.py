@@ -98,7 +98,7 @@ class LayerWrappebleQwen(LayerWrappebleDTHfLLM):
     def tokenize(self, texts, **kwargs):
         tokenized_texts = super().tokenize(texts, **kwargs)
         user_mask = self.generate_user_mask(tokenized_texts)
-        user_mask.to(tokenized_texts["input_ids"].device)
+        user_mask.to(self.device)
         tokenized_texts["attention_mask"] += user_mask
         return tokenized_texts
 
