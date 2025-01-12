@@ -40,7 +40,7 @@ class Observewrapper(DTLayerWrapper):
         super().__init__(mapper, layer)
     
     def forward_pass(self, hidden_states, attention_mask=None, **kwargs):
-        print(kwargs)
+        layer_output = self.layer(hidden_states, attention_mask=attention_mask, **kwargs)
         return hidden_states
 
     def freeze(self):
