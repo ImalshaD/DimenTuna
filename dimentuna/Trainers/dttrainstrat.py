@@ -252,7 +252,7 @@ class TwoPhasedSeq2SeqTS(TwoPhasedTS):
         layer_idx += self.layer_shift
         return self.llm.get_Layer_output(text, layer_idx)
 
-class TwoPhasedSeq2SeqKL(TwoPhasedTS):
+class TwoPhasedSeq2SeqKL(TwoPhasedSeq2SeqTS):
 
     def __init__(self, llm, encoder, projector, train_loader, val_loader, lr, device, target_layers, mapper_train_loader, mapper_val_loader, layer_shift = 0, enable_dp = False, gpu_ids=None, **kwargs):
         super().__init__(llm, encoder, projector, train_loader, val_loader, lr, device, target_layers, mapper_train_loader, mapper_val_loader, layer_shift, enable_dp, gpu_ids, **kwargs)
